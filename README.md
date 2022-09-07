@@ -2,9 +2,7 @@
 
 ### I. How to start this skeleton
 
-#### 1. Requirement
-
-##### Hardware
+#### Hardware Requirement
 ```
 CPU >= Core-i3
 RAM >= 8GB
@@ -19,13 +17,13 @@ RAM >= 8GB
 
 ### III. Setup your local dev environment
 
-#### 1. Fork this project to your own project on our gitlab
+#### 1.1. Fork this project to your own project on our gitlab
 
 - Your **Gitlab account** will be included in the `Onboard Email` that you received.
 - Please add your public key into **Gitlab account**
 - Select the **Fork** button on this project, and fork it to your account.
 
-#### 2. Clone forked project to your local machine
+#### 1.2. Clone forked project to your local machine
 
 > Please feel free to using any `git client` tool that you prefer or use our way to clone the project:
 
@@ -49,12 +47,12 @@ CONTAINER ID   IMAGE                    COMMAND                  CREATED        
 5b5e90fefdeb   wurstmeister/zookeeper   "/bin/sh -c '/usr/sb…"   44 seconds ago   Up 4 seconds   22/tcp, 2888/tcp, 3888/tcp, 0.0.0.0:2181->2181/tcp, :::2181->2181/tcp   booking-zookeeper
 ```
 
-#### 3. Start Service
+#### 1.3. Start Service
 - Use Intellij IDE open this file and start service. 
 ```
 booking-application/src/main/java/com/onemount/BookingApplication.java
 ```
-#### 4. Service is started?
+#### 1.4. Service is started?
 - Check Swagger via browser
 ```shell
 http://localhost:8080/swagger-ui/#/
@@ -76,7 +74,7 @@ curl 'http://localhost:8080/messages/1'
   }
 }
 ```
-#### 5. Package structure
+#### 1.5. Package structure
 - In this skeleton, we apply DDD (Domain Driven Design) and Hexagonal principles.
 - This skeleton is separated into three main packages
 
@@ -103,7 +101,7 @@ curl 'http://localhost:8080/messages/1'
        └── repo                           -----> Contains Implementation of Domain Repository, ex: BookingRepository (implementation of IBookingRepository)
           └── model                       -----> Jpa Entity (mapping to db table, CN prefix: `Jpa`), ex: JpaBooking
 ```
-#### 6. Booking Exception Handler
+#### 1.6. Booking Exception Handler
 - Global exception handler is defined in `com/onemount/application/api/exceptionhandler/BookingGlobalExceptionHandler.java`
   - To declare an exception:
     - Step 1: Defining it in `com/onemount/domain/exception/BookingErrors.java`
@@ -136,18 +134,18 @@ curl 'http://localhost:8080/messages/1'
          }
       ```
 
-#### 7. Database Migration 
+#### 1.7. Database Migration 
 - This skeleton uses [Flyway](https://www.baeldung.com/database-migrations-with-flyway) for Database Migration.
 - To create new or alter existing database table :
   - Put sql migration file in this folder `src/main/resources/db/migration`
   - The filename pattern of sql migration file is `Vx.y__fileName.sql`, in which `x.y` is versioning, it should be higher than the last migration file.
   
-#### 8. What libs that used in this skeleton
+#### 1.8. What libs that used in this skeleton
 - [Java SpringBoot Framework](https://spring.io/projects/spring-boot)
 - [Lombok](https://projectlombok.org/)
 - [MapStruct](https://mapstruct.org/)
 - [Flyway Migration](https://www.baeldung.com/database-migrations-with-flyway)
 
-#### 9. References
+### IV. References
 - [Kafka Tools](https://www.conduktor.io/download/)
 - [Kafka Fundamentals for Beginner](https://www.linkedin.com/feed/update/urn:li:activity:6943480742320427008/)
