@@ -103,7 +103,7 @@ curl 'http://localhost:8080/messages/1'
        └── repo                           -----> Contains Implementation of Domain Repository, ex: BookingRepository (implementation of IBookingRepository)
           └── model                       -----> Jpa Entity (mapping to db table, CN prefix: `Jpa`), ex: JpaBooking
 ```
-#### 5. Booking Exception Handler
+#### 6. Booking Exception Handler
 - Global exception handler is defined in `com/onemount/application/api/exceptionhandler/BookingGlobalExceptionHandler.java`
   - To declare an exception:
     - Step 1: Defining it in `com/onemount/domain/exception/BookingErrors.java`
@@ -146,7 +146,7 @@ curl 'http://localhost:8080/messages/1'
 - [Java SpringBoot Framework](https://spring.io/projects/spring-boot)
 - [Lombok](https://projectlombok.org/)
 - [MapStruct](https://mapstruct.org/)
-- [Flyway](https://www.baeldung.com/database-migrations-with-flyway)igration
+- [Flyway Migration](https://www.baeldung.com/database-migrations-with-flyway)
 
 #### 9. References
 - [Kafka Tools](https://www.conduktor.io/download/)
