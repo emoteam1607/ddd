@@ -34,6 +34,20 @@ services:
     depends_on:
       - zookeeper
 
+  booking:
+    container_name: booking
+    image: om/booking:latest
+    ports:
+      - '8080:8080'
+    expose:
+      - '8080'
+    environment:
+      - OPS=test
+    depends_on:
+      - mysql
+      - kafka
+    network_mode: host
+
 volumes:
   mysql:
     driver: local

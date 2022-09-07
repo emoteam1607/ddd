@@ -146,6 +146,19 @@ curl 'http://localhost:8080/messages/1'
 - [MapStruct](https://mapstruct.org/)
 - [Flyway Migration](https://www.baeldung.com/database-migrations-with-flyway)
 
+### 1.9. Build docker image in local for testing
+  - Go to skeleton project 
+  ```shell
+  cd hack2hire-2022-java
+  ```
+  - Running the following scripts for testing in your local
+    ```shell
+    mvn --batch-mode -U clean package spring-boot:repackage -DskipTests
+    cd devops
+    docker build -t om/booking -f Dockerfile.local ../
+    docker-compose up booking
+    ```
+
 ### IV. References
 - [Kafka Tools](https://www.conduktor.io/download/)
 - [Kafka Fundamentals for Beginner](https://www.linkedin.com/feed/update/urn:li:activity:6943480742320427008/)
