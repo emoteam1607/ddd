@@ -1,5 +1,6 @@
 package com.onemount.application.api.response.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.onemount.domain.model.enums.ReservationStatus;
@@ -30,8 +31,10 @@ public class ReservationDto {
 
     private String canceledReason;
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private LocalDate canceledDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private LocalDate bookedDate;
 
     private ReservationStatus status;

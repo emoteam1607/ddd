@@ -1,5 +1,7 @@
 package com.onemount.application.api.response.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +15,7 @@ import java.time.LocalDate;
  */
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ShowDto {
 
     @JsonProperty("show_id")
@@ -20,6 +23,7 @@ public class ShowDto {
 
     private String name;
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private LocalDate startDate;
 
     private String imageUrl;

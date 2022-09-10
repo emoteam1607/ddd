@@ -26,7 +26,8 @@ public class ReservationCreateDto {
     private List<String> selectedSeats;
 
     @Valid
-    private ReservationCreateDto.GuestInfo user;
+    @JsonProperty("user")
+    private ReservationCreateDto.GuestInfo guest;
 
     @Validated
     @Getter
@@ -35,9 +36,11 @@ public class ReservationCreateDto {
     public static class GuestInfo {
 
         @NotBlank
-        private String name;
+        @JsonProperty("name")
+        private String fullName;
 
         @NotBlank
-        private String phoneNumber;
+        @JsonProperty("phone_number")
+        private String phone;
     }
 }

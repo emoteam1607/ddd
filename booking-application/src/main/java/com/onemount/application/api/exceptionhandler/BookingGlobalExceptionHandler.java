@@ -7,6 +7,7 @@ import com.onemount.application.api.response.dto.FieldViolation;
 import com.onemount.domain.exception.BookingErrors;
 import com.onemount.domain.exception.BookingException;
 import com.onemount.infrastructure.utils.CollectionUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * It wraps all Booking Application exceptions to predefined structure that was defined in com/onemount/application/api/response/dto/BaseResponse.java
  * Not need to modify
  */
+@Slf4j
 @ControllerAdvice
 public class BookingGlobalExceptionHandler {
 
@@ -39,6 +41,7 @@ public class BookingGlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseResponse<Void>> handleException(Exception exception) {
+        log.error(exception.getMessage(), exception);
         var errorCode = BookingErrors.INTERNAL_SERVER_ERROR;
         var data = BaseResponse.ofFailed(errorCode, exception.getMessage());
         return new ResponseEntity<>(data, errorCode.getHttpStatus());

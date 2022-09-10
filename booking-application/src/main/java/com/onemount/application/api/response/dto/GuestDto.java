@@ -1,5 +1,7 @@
 package com.onemount.application.api.response.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,9 +12,12 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GuestDto {
 
-    private String name;
+    @JsonProperty("name")
+    private String fullName;
 
-    private String phoneNumber;
+    @JsonProperty("phone_number")
+    private String phone;
 }

@@ -13,6 +13,7 @@ public class BookingErrors {
      * 400
      */
     public static final BookingBusinessError RESERVATION_ALREADY_CANCELED = new BookingBusinessError(400, "Your reservation already canceled", HttpStatus.BAD_REQUEST);
+    public static final BookingBusinessError SEAT_NOT_AVAILABLE = new BookingBusinessError(400, "Seat not available", HttpStatus.BAD_REQUEST);
     public static final BookingBusinessError INVALID_PARAMETERS = new BookingBusinessError(400, "Invalid parameters", HttpStatus.BAD_REQUEST);
 
 
@@ -25,6 +26,7 @@ public class BookingErrors {
      */
     public static final BookingBusinessError SHOW_NOT_FOUND = new BookingBusinessError(404, "Your selected show not existed", HttpStatus.NOT_FOUND);
     public static final BookingBusinessError RESERVATION_NOT_FOUND = new BookingBusinessError(404, "Your selected reservation not existed", HttpStatus.NOT_FOUND);
+    public static final BookingBusinessError SEA_NOT_FOUND = new BookingBusinessError(404, "Your selected seat not existed", HttpStatus.NOT_FOUND);
 
     /**
      * 500

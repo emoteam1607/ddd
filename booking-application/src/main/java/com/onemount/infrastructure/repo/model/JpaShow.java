@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
@@ -32,6 +33,7 @@ public class JpaShow extends BaseModel {
     private String name;
 
     @OneToMany
+    @JoinColumn(name = "show_id")
     private Set<JpaSeat> seats;
 
     @Column(name = "start_date")

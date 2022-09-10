@@ -1,35 +1,49 @@
 package com.onemount.domain.service;
 
+import com.google.common.util.concurrent.Striped;
+import com.onemount.domain.events.BookingAcceptedEvent;
 import com.onemount.domain.exception.BookingErrors;
 import com.onemount.domain.exception.BookingException;
 import com.onemount.domain.model.Reservation;
 import com.onemount.domain.model.enums.ReservationStatus;
+import com.onemount.domain.model.enums.SeatStatus;
 import com.onemount.domain.ports.api.IReservationService;
 import com.onemount.domain.ports.spi.IGuestPersistence;
 import com.onemount.domain.ports.spi.IReservationPersistence;
+import com.onemount.domain.ports.spi.ISeatPersistence;
 import com.onemount.domain.ports.spi.IShowPersistence;
 import com.onemount.infrastructure.commons.Page;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 /**
  * author: anct
  * date: 10/09/2022
  * YNWA
  */
+@Slf4j
 @Service
+@SuppressWarnings("all")
 @RequiredArgsConstructor
 public class ReservationService implements IReservationService {
 
     private final IGuestPersistence guestPersistence;
     private final IShowPersistence showPersistence;
     private final IReservationPersistence reservationPersistence;
+    private final ISeatPersistence seatPersistence;
     private final ApplicationEventPublisher eventPublisher;
+
+    // using 2ˆ10 = 1024 locks.
+    // Can using more when concurrent access heavily.
+    private Striped<Lock> lockStriped = Striped.lazyWeakLock(10);
 
     @Override
     public Reservation getByCodeOrElseThrow(String reservationCode) {
@@ -38,18 +52,16 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
+    @Transactional
     public Reservation createReservation(Integer showId, Reservation reservation) {
-
         if (!showPersistence.existById(showId)) {
             throw new BookingException(BookingErrors.SHOW_NOT_FOUND);
         }
-
-        //todo handle concurrent here
-
         return createReservation(reservation);
     }
 
     @Override
+    @Transactional
     public List<Reservation> createReservations(Integer showId, List<Reservation> reservations) {
 
         if (!showPersistence.existById(showId)) {
@@ -64,17 +76,59 @@ public class ReservationService implements IReservationService {
     }
 
     private Reservation createReservation(Reservation reservation) {
-        var savedGuest = guestPersistence.save(reservation.getGuest());
-        reservation.setGuest(savedGuest);
+        var lock = lockStriped.get(lockKey(reservation));
+        try {
+            lock.lock();
 
-        // save guests.
-        // create reservation.
+            var showId = reservation.getShowId();
+            var seatCode = reservation.getSeatCode();
 
-        var savedReservation = reservationPersistence.save(reservation);
+            var seatOp = seatPersistence.findByShowIdAndCode(showId, seatCode);
 
-        // sent event here
+            if (seatOp.isEmpty()) {
+                var msg = String.format("Seat %s not found. Please try other seat.", seatCode);
+                throw new BookingException(BookingErrors.SEA_NOT_FOUND, msg);
+            }
 
-        return savedReservation;
+            var seat = seatOp.get();
+            // check status of seat
+            if (seat.getStatus() != SeatStatus.AVAILABLE) {
+                var msg = String.format("Seat %s not available. Please try other seat.", seatCode);
+                throw new BookingException(BookingErrors.SEAT_NOT_AVAILABLE, msg);
+            }
+
+            var bookedDate = LocalDate.now();
+            // save the guest
+            var savedGuest = guestPersistence.save(reservation.getGuest());
+            reservation.setGuest(savedGuest);
+            reservation.setBookedDate(bookedDate);
+
+            // change seat status to BOOKED
+            seat.setStatus(SeatStatus.BOOKED);
+            seat.setBookedDate(bookedDate);
+
+            var savedReservation = reservationPersistence.save(reservation);
+
+            var savedSeat = seatPersistence.save(seat);
+
+            // sent event here
+            eventPublisher.publishEvent(new BookingAcceptedEvent("anct", savedReservation));
+
+            log.info("DONE");
+
+            return savedReservation;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    /**
+     * We lock on show id + seat code
+     * Can using show id on lock.
+     * to concurrency.
+     */
+    private String lockKey(Reservation reservation) {
+        return String.format("%s_%s", reservation.getShowId(), reservation.getSeatCode());
     }
 
     @Override
@@ -83,6 +137,7 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
+    @Transactional
     public void cancelReservation(Integer showId,
                                   String reservationCode,
                                   String canceledReason,
@@ -97,9 +152,12 @@ public class ReservationService implements IReservationService {
             throw new BookingException(BookingErrors.RESERVATION_ALREADY_CANCELED);
         }
 
-        reservation.setCanceledReason(canceledReason);
         reservation.setStatus(ReservationStatus.CANCELED);
+        reservation.setCanceledReason(canceledReason);
         reservation.setCanceledDate(LocalDate.now());
+
+        // change seat status to AVAILABLE
+        seatPersistence.refreshSeat(showId, reservation.getSeatCode());
 
         reservationPersistence.save(reservation);
     }

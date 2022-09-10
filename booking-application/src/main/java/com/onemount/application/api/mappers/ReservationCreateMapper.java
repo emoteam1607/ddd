@@ -2,6 +2,7 @@ package com.onemount.application.api.mappers;
 
 import com.onemount.application.api.request.dto.ReservationCreateDto;
 import com.onemount.domain.model.Reservation;
+import com.onemount.domain.model.enums.ReservationStatus;
 import org.mapstruct.Mapper;
 
 import java.util.ArrayList;
@@ -23,7 +24,9 @@ public interface ReservationCreateMapper {
         var reservations = new ArrayList<Reservation>(data.getSelectedSeats().size());
 
         for (var seatCode : data.getSelectedSeats()) {
-            reservations.add(toModel(showId, seatCode, data));
+            var reservation = toModel(showId, seatCode, data);
+            reservation.setStatus(ReservationStatus.ACCEPTED);
+            reservations.add(reservation);
         }
 
         return reservations;
