@@ -17,3 +17,5 @@ spring:
   kafka:
     consumer:
       bootstrap-servers: 34.101.206.25:9092
+    producer:
+      bootstrap-servers: 34.101.206.25:9092

@@ -1,12 +1,12 @@
 package com.onemount.application.api.response.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 
 /**
  * Author: anct
@@ -23,8 +23,11 @@ public class ShowDto {
 
     private String name;
 
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private LocalDate startDate;
 
     private String imageUrl;
+
+    public Long getStartDate() {
+        return startDate == null ? null : startDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+    }
 }

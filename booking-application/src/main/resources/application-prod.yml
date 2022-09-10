@@ -7,3 +7,5 @@ spring:
   kafka:
     consumer:
       bootstrap-servers: booking-kafka:9092
+    producer:
+      bootstrap-servers: booking-kafka:9092

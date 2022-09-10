@@ -1,12 +1,12 @@
 package com.onemount.application.api.response.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.onemount.domain.model.enums.SeatStatus;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 
 /**
  * Author: anct
@@ -25,6 +25,9 @@ public class SeatDto {
 
     private SeatStatus status;
 
-    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     private LocalDate bookedDate;
+
+    public Long getBookedDate() {
+        return bookedDate == null ? null : bookedDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+    }
 }
