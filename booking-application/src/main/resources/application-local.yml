@@ -1,9 +1,9 @@
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://34.124.172.115:3306/booking?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8
-    username: admin
-    password: emoDB@1234
+    url: jdbc:mysql://mysql-hack2hire.onemount.dev:3306/user079-dijz?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8
+    username: user079-dijz
+    password: pwdtwxtac0knjddup
     hikari:
       connectionTimeout: 30000
       minimumIdle: 1
