@@ -4,10 +4,11 @@ spring:
 
   jpa:
     hibernate:
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
       ddl-auto: update
 
   flyway:
-    enabled: true
+    enabled: false
 
   jackson:
     default-property-inclusion: non_absent
@@ -25,6 +26,12 @@ spring:
   kafka:
     consumer:
       group-id: om-hack2hire-booking-accepted
+      session-timeout-ms: 600000
+      max-poll-interval-ms: 900000
+      fetch-min-bytes: 50000
+      receive-buffer-bytes: 262144
+      max-partition-fetch-bytes: 2097152
+      auto-commit: true
       auto-offset-reset: latest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer

@@ -13,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class BookingBusinessError implements Serializable {
     private static final long serialVersionUID = 2405172041950251807L;
-    private int code;
-    private String message;
-    private HttpStatus httpStatus;
+    private final int code;
+    private final String message;
+    private final HttpStatus httpStatus;
 }
