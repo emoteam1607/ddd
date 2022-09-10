@@ -27,7 +27,7 @@ public class ReservationDto {
     private String seatCode;
 
     // Booked user
-    private GuestDto user;
+    private GuestDto guest;
 
     private String canceledReason;
 
